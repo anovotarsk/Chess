@@ -1,0 +1,4 @@
+C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/test.dir
+C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/test_autogen.dir
