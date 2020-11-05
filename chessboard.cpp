@@ -110,11 +110,10 @@ void ChessBoard::mousePressEvent(QMouseEvent *e) {
 
     if (e->button() == Qt::LeftButton) {
         m_from = m_logic->getArea(x - 1, y - 1);
-        std::cerr << "Left - " << m_from << std::endl;
+        this->repaint();
     }
     if (e->button() == Qt::RightButton && m_from != -1) {
         m_to = m_logic->getArea(x - 1, y - 1);
-        std::cerr << "Right - " << m_to << std::endl;
         if (m_from != -1 && m_to != -1 && m_from != m_to) {
             m_logic->moveFigure(m_from, m_to);
             this->repaint();
@@ -134,6 +133,21 @@ void ChessBoard::drawFigures(QPainter *p) {
     QSize size =  this->size();
     QRect rect(size.height() / 10, size.height() / 10, size.height() / 10, size.width() / 10);
     QPixmap img;
+
+    if (m_from != -1) {
+        QBrush br("#FF9C77");
+        auto ways = m_logic->selectArea(m_from);
+        int x;
+        int y;
+
+        for (auto i : ways) {
+            x = (m_logic->getX(i) + 1) * size.height() / 10;
+            y = (m_logic->getY(i) + 1) * size.height() / 10;
+            p->setBrush(br);
+            p->drawRect(x, y, size.height() / 10, size.height() / 10);
+        }
+    }
+
 
     for (int i = 0; i < 64; i++) {
         if (board[i].first != ChessColor::No) {

@@ -26,7 +26,7 @@ class ChessLogic {
 public:
     ChessLogic();
 
-    //std::list<int> selectArea(int area);
+    std::list<int> selectArea(int area);
     void moveFigure(int from, int to);
     std::array<std::pair<ChessColor, ChessFigure>, 64> getBoard();
     ChessColor getTurn();
@@ -35,6 +35,8 @@ public:
     int getArea(int x, int y);
 
 private:
+    std::list<int> pawnWays(int area);
+
     ChessColor m_turn;
     std::array<std::pair<ChessColor, ChessFigure>, 64> m_board;
 };

@@ -73,3 +73,38 @@ void ChessLogic::moveFigure(int from, int to) {
             m_turn = ChessColor::White;
     }
 }
+
+std::list<int> ChessLogic::pawnWays(int area) {
+    std::list<int> ways;
+
+    if (m_board[area].first == ChessColor::White) {
+        if (area - 8 > 0 && m_board[area - 8].first == ChessColor::No) {
+            ways.push_back(area - 8);
+            if (getY(area) == 6 && m_board[area - 16].first == ChessColor::No)
+                ways.push_back(area - 16);
+        }
+        if (getX(area) > 0 && getY(area) > 0 && m_board[area - 9].first == ChessColor::Black)
+            ways.push_back(area - 9);
+        if (getX(area) < 7 && getY(area) > 0 && m_board[area - 7].first == ChessColor::Black)
+            ways.push_back(area - 7);
+    }
+    if (m_board[area].first == ChessColor::Black) {
+        if (area + 8 < 64 && m_board[area + 8].first == ChessColor::No) {
+            ways.push_back(area + 8);
+            if (getY(area) == 1 && m_board[area + 16].first == ChessColor::No)
+                ways.push_back(area + 16);
+        }
+        if (getX(area) > 0 && getY(area) < 7 && m_board[area + 9].first == ChessColor::White)
+            ways.push_back(area - 9);
+        if (getX(area) < 7 && getY(area) < 7 && m_board[area + 7].first == ChessColor::White)
+            ways.push_back(area + 7);
+    }
+    return ways;
+}
+
+std::list<int> ChessLogic::selectArea(int area) {
+    if (m_board[area].first == ChessColor::No || m_board[area].first != m_turn)
+        return std::list<int>();
+    if (m_board[area].second == ChessFigure::Pawn)
+        return pawnWays(area);
+}
