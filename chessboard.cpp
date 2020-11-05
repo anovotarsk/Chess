@@ -1,7 +1,9 @@
-#include "chessboard.h"
+﻿#include "chessboard.h"
 
 ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent),
-    m_logic(new ChessLogic() ) {
+    m_logic(new ChessLogic() ),
+    m_from(-1),
+    m_to(-1) {
     this->setSizeIncrement(500, 500);
     this->setMinimumSize(400, 400);
 }
@@ -102,6 +104,24 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
 }
 
 void ChessBoard::mousePressEvent(QMouseEvent *e) {
+    QSize size =  this->size();
+    int x = e->x() / (size.height() / 10);
+    int y = e->y() / (size.height() / 10);
+
+    if (e->button() == Qt::LeftButton) {
+        m_from = m_logic->getArea(x - 1, y - 1);
+        std::cerr << "Left - " << m_from << std::endl;
+    }
+    if (e->button() == Qt::RightButton && m_from != -1) {
+        m_to = m_logic->getArea(x - 1, y - 1);
+        std::cerr << "Right - " << m_to << std::endl;
+        if (m_from != -1 && m_to != -1 && m_from != m_to) {
+            m_logic->moveFigure(m_from, m_to);
+            this->repaint();
+        }
+        m_from = -1;
+        m_to = -1;
+    }
 }
 
 void ChessBoard::resizeEvent(QResizeEvent* event) {

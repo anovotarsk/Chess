@@ -1,7 +1,8 @@
 #include "chesslogic.h"
 
-ChessLogic::ChessLogic() : m_turn(ChessColor::White) {
+ChessLogic::ChessLogic() {
     m_board = std::array<std::pair<ChessColor, ChessFigure>, 64>();
+    m_turn = ChessColor::White;
 
     for (int i = 0; i < 64; i++)
         m_board[i] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
@@ -34,9 +35,41 @@ std::array<std::pair<ChessColor, ChessFigure>, 64> ChessLogic::getBoard() {
 }
 
 int ChessLogic::getX(int area) {
+    if (area < 0 || area >= 64)
+        return -1;
     return area % 8;
 }
 
 int ChessLogic::getY(int area) {
+    if (area < 0 || area >= 64)
+        return -1;
     return area / 8;
+}
+
+int ChessLogic::getArea(int x, int y) {
+    int area = 0;
+    if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+        return -1;
+    }
+
+    for (int i = 0; i < y; i++)
+        area += 8;
+    area += x;
+    return area;
+}
+
+ChessColor ChessLogic::getTurn() {
+    return m_turn;
+}
+
+void ChessLogic::moveFigure(int from, int to) {
+    if (m_turn == m_board[from].first) {
+        std::cerr << ((m_turn == ChessColor::White) ? "Turn - white\n" : "Turn - black\n");
+        m_board[to] = m_board[from];
+        m_board[from] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
+        if (m_board[to].first == ChessColor::White)
+            m_turn = ChessColor::Black;
+        else
+            m_turn = ChessColor::White;
+    }
 }

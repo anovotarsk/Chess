@@ -3,6 +3,8 @@
 
 #include <list>
 #include <array>
+#include <iostream>
+
 
 enum ChessFigure {
     King,
@@ -25,11 +27,12 @@ public:
     ChessLogic();
 
     //std::list<int> selectArea(int area);
-    //void moveFigure(int from, int to);
+    void moveFigure(int from, int to);
     std::array<std::pair<ChessColor, ChessFigure>, 64> getBoard();
-    //ChessColor getTurn();
+    ChessColor getTurn();
     int getX(int area);
     int getY(int area);
+    int getArea(int x, int y);
 
 private:
     ChessColor m_turn;

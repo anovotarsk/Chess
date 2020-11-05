@@ -43,6 +43,8 @@ private:
     void drawFigures(QPainter *p);
 
     ChessLogic *m_logic;
+    int m_from;
+    int m_to;
 };
 
 #endif // CHESSBOARD_H
