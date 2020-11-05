@@ -1,9 +1,13 @@
 #include "chessboard.h"
 
-ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent)
-{
+ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent),
+    m_logic(new ChessLogic() ) {
     this->setSizeIncrement(500, 500);
     this->setMinimumSize(400, 400);
+}
+
+ChessBoard::~ChessBoard() {
+    delete m_logic;
 }
 
 void changeColor(QBrush &br) {
@@ -36,7 +40,7 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
         x += size.width() / 10;
     }
     //Рисуем левый столбик
-    str[0] = '1';
+    str[0] = '8';
     br.setColor("#FFEDA2");
     x = 0;
     y = size.width() / 10;
@@ -44,7 +48,7 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
         p->setBrush(br);
         p->drawRect(x, y, size.width() / 10, size.height() / 10);
         p->drawText(x, y, size.width() / 10, size.height() / 10, Qt::AlignCenter, str);
-        str[0] += 1;
+        str[0] -= 1;
         y += size.width() / 10;
     }
 
@@ -65,7 +69,7 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
     }
 
     //Рисуем правый столбик
-    str[0] = '1';
+    str[0] = '8';
     br.setColor("#FFEDA2");
     x =  size.width() /10 * 9;
     y = size.width() / 10;
@@ -73,7 +77,7 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
         p->setBrush(br);
         p->drawRect(x, y, size.width() / 10, size.height() / 10);
         p->drawText(x, y, size.width() / 10, size.height() / 10, Qt::AlignCenter, str);
-        str[0] += 1;
+        str[0] -= 1;
         y += size.width() / 10;
     }
 
@@ -93,13 +97,75 @@ void ChessBoard::paintEvent(QPaintEvent *event) {
         x += size.width() / 10;
     }
 
+    drawFigures(p);
     delete p;
 }
 
-
-
+void ChessBoard::mousePressEvent(QMouseEvent *e) {
+}
 
 void ChessBoard::resizeEvent(QResizeEvent* event) {
     int lesser = std::min(event->size().width(), event->size().height());
     resize(lesser, lesser);
+}
+
+void ChessBoard::drawFigures(QPainter *p) {
+    auto board = m_logic->getBoard();
+    QSize size =  this->size();
+    QRect rect(size.height() / 10, size.height() / 10, size.height() / 10, size.width() / 10);
+    QPixmap img;
+
+    for (int i = 0; i < 64; i++) {
+        if (board[i].first != ChessColor::No) {
+            rect.setX(size.height() / 10 * (m_logic->getX(i) + 1));
+            rect.setY(size.height() / 10 * (m_logic->getY(i) + 1));
+            rect.setHeight(size.height() / 10);
+            rect.setWidth(size.height() / 10);
+            if (board[i].first == ChessColor::White) {
+                switch (board[i].second) {
+                    case ChessFigure::King:
+                        img.load(WHITE_KING);
+                        break;
+                    case ChessFigure::Queen:
+                        img.load(WHITE_QUEEN);
+                        break;
+                    case ChessFigure::Knight:
+                        img.load(WHITE_KNIGHT);
+                        break;
+                    case ChessFigure::Rook:
+                        img.load(WHITE_ROOK);
+                        break;
+                    case ChessFigure::Bishop:
+                        img.load(WHITE_BISHOP);
+                        break;
+                    case ChessFigure::Pawn:
+                        img.load(WHITE_PAWN);
+                        //break;
+                }
+            }
+            else {
+                switch (board[i].second) {
+                    case ChessFigure::King:
+                        img.load(BLACK_KING);
+                        break;
+                    case ChessFigure::Queen:
+                        img.load(BLACK_QUEEN);
+                        break;
+                    case ChessFigure::Knight:
+                        img.load(BLACK_KNIGHT);
+                        break;
+                    case ChessFigure::Rook:
+                        img.load(BLACK_ROOK);
+                        break;
+                    case ChessFigure::Bishop:
+                        img.load(BLACK_BISHOP);
+                        break;
+                    case ChessFigure::Pawn:
+                        img.load(BLACK_PAWN);
+                        //break;
+                }
+            }
+            p->drawPixmap(rect, img);
+        }
+    }
 }

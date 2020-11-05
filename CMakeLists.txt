@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         chessboard.cpp
         chessboard.h
+        chesslogic.cpp
+        chesslogic.h
 )
 
 add_executable(test
