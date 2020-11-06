@@ -12,6 +12,7 @@
 #include <QPixmap>
 #include <QRect>
 #include <chesslogic.h>
+#include <algorithm>
 
 #define WHITE_KING      "..\\Chess\\resources\\king_white.png"
 #define WHITE_QUEEN     "..\\Chess\\resources\\queen_white.png"

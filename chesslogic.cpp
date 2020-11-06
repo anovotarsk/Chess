@@ -11,6 +11,7 @@ ChessLogic::ChessLogic() {
     for (int i = 48; i < 56; i++)
         m_board[i] = std::pair<ChessColor, ChessFigure>(ChessColor::White, ChessFigure::Pawn);
 
+
     m_board[0] = std::pair<ChessColor, ChessFigure>(ChessColor::Black, ChessFigure::Rook);
     m_board[1] = std::pair<ChessColor, ChessFigure>(ChessColor::Black, ChessFigure::Knight);
     m_board[2] = std::pair<ChessColor, ChessFigure>(ChessColor::Black, ChessFigure::Bishop);
@@ -64,7 +65,6 @@ ChessColor ChessLogic::getTurn() {
 
 void ChessLogic::moveFigure(int from, int to) {
     if (m_turn == m_board[from].first) {
-        std::cerr << ((m_turn == ChessColor::White) ? "Turn - white\n" : "Turn - black\n");
         m_board[to] = m_board[from];
         m_board[from] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
         if (m_board[to].first == ChessColor::White)
@@ -74,8 +74,24 @@ void ChessLogic::moveFigure(int from, int to) {
     }
 }
 
-std::list<int> ChessLogic::pawnWays(int area) {
+std::list<int> ChessLogic::pawnWays(int area, bool check) {
     std::list<int> ways;
+
+    if (check) {
+        if (m_board[area].first == ChessColor::White) {
+            if (getX(area) > 0 && getY(area) > 0)
+                ways.push_back(area - 9);
+            if (getX(area) < 7 && getY(area) > 0)
+                ways.push_back(area - 7);
+        }
+        if (m_board[area].first == ChessColor::Black) {
+            if (getX(area) > 0 && getY(area) < 7)
+                ways.push_back(area + 7);
+            if (getX(area) < 7 && getY(area) < 7)
+                ways.push_back(area + 9);
+            return ways;
+        }
+    }
 
     if (m_board[area].first == ChessColor::White) {
         if (area - 8 > 0 && m_board[area - 8].first == ChessColor::No) {
@@ -94,17 +110,312 @@ std::list<int> ChessLogic::pawnWays(int area) {
             if (getY(area) == 1 && m_board[area + 16].first == ChessColor::No)
                 ways.push_back(area + 16);
         }
-        if (getX(area) > 0 && getY(area) < 7 && m_board[area + 9].first == ChessColor::White)
-            ways.push_back(area - 9);
-        if (getX(area) < 7 && getY(area) < 7 && m_board[area + 7].first == ChessColor::White)
+        if (getX(area) > 0 && getY(area) < 7 && m_board[area + 7].first == ChessColor::White)
             ways.push_back(area + 7);
+        if (getX(area) < 7 && getY(area) < 7 && m_board[area + 9].first == ChessColor::White)
+            ways.push_back(area + 9);
     }
+    return ways;
+}
+
+std::list<int> ChessLogic::rookWays(int area, bool check) {
+    std::list<int> ways;
+
+    for (int i = 1; i <= getX(area); i++) {
+        if (m_board[area - i].second == ChessFigure::None)
+            ways.push_back(area - i);
+        else {
+            if (check
+                && m_board[area - i].second == ChessFigure::King
+                && m_board[area - i].first != m_board[area].first)
+                ways.push_back(area - i);
+            else {
+                if (m_board[area - i].first != m_board[area].first)
+                    ways.push_back(area - i);
+                break;
+            }
+        }
+    }
+
+    for (int i = getX(area), j = 1; i < 7; i++, j++) {
+        if (m_board[area + j].second == ChessFigure::None)
+            ways.push_back(area + j);
+        else {
+            if (check
+                && m_board[area + j].second == ChessFigure::King
+                && m_board[area + j].first != m_board[area].first)
+                ways.push_back(area + j);
+            else {
+                if (m_board[area + j].first != m_board[area].first)
+                    ways.push_back(area + j);
+                break;
+            }
+        }
+    }
+
+    for (int i = 1; i - 1 < getY(area); i++) {
+        if (m_board[area - 8 * i].second == ChessFigure::None)
+            ways.push_back(area - 8 * i);
+        else {
+            if (check
+                && m_board[area - 8 * i].second == ChessFigure::King
+                && m_board[area - 8 * i].first != m_board[area].first)
+                ways.push_back(area - 8 * i);
+            else {
+                if (m_board[area - 8 * i].first != m_board[area].first)
+                    ways.push_back(area - 8 * i);
+                break;
+            }
+        }
+    }
+
+    for (int i = getY(area), j = 1; i < 7; i++, j++) {
+        if (m_board[area + 8 * j].second == ChessFigure::None)
+            ways.push_back(area + 8 * j);
+        else {
+            if (check
+                && m_board[area + 8 * j].second == ChessFigure::King
+                && m_board[area + 8 * j].first != m_board[area].first)
+                ways.push_back(area + 8 * j);
+            else {
+                if (m_board[area + 8 * j].first != m_board[area].first)
+                    ways.push_back(area + 8 * j);
+                break;
+            }
+        }
+    }
+
+    return ways;
+}
+
+std::list<int> ChessLogic::bishopWays(int area, bool check) {
+    std::list<int> ways;
+
+    for (int i = 1; i <= getX(area) && area - i - 8 * i > -1; i++) {
+        if (m_board[area - i - 8 * i].second == ChessFigure::None)
+            ways.push_back(area - i - 8 * i);
+        else {
+            if (check
+                && m_board[area - i - 8 * i].second == ChessFigure::King
+                && m_board[area - i - 8 * i].first != m_board[area].first)
+                ways.push_back(area - i - 8 * i);
+            else {
+                if (m_board[area - i - 8 * i].first != m_board[area].first)
+                    ways.push_back(area - i - 8 * i);
+                break;
+            }
+        }
+    }
+
+    for (int i = getX(area), j = 1; i < 7 && area + j + 8 * j < 64; i++, j++) {
+        if (m_board[area + j + 8 * j].second == ChessFigure::None)
+            ways.push_back(area + j + 8 * j);
+        else {
+            if (check
+                && m_board[area + j + 8 * j].second == ChessFigure::King
+                && m_board[area + j + 8 * j].first != m_board[area].first)
+                ways.push_back(area + j + 8 * j);
+            else {
+                if (m_board[area + j + 8 * j].first != m_board[area].first)
+                    ways.push_back(area + j + 8 * j);
+                break;
+            }
+        }
+    }
+
+    for (int i = 1;
+         i - 1 < getY(area) && area - 8 * i + i > -1 && getX(area) + i < 8;
+         i++) {
+        if (m_board[area - 8 * i + i].second == ChessFigure::None)
+            ways.push_back(area - 8 * i + i);
+        else {
+            if (check
+                && m_board[area - 8 * i + i].second == ChessFigure::King
+                && m_board[area - 8 * i + i].first != m_board[area].first)
+                ways.push_back(area - 8 * i + i);
+            else {
+                if (m_board[area - 8 * i + i].first != m_board[area].first)
+                    ways.push_back(area - 8 * i + i);
+                break;
+            }
+        }
+    }
+
+    for (int i = getY(area), j = 1;
+         i < 7 && area + 8 * j - j < 64 && getX(area) - j > -1;
+         i++, j++) {
+        if (m_board[area + 8 * j - j].second == ChessFigure::None)
+            ways.push_back(area + 8 * j - j);
+        else {
+            if (check
+                && m_board[area + 8 * j - j].second == ChessFigure::King
+                && m_board[area + 8 * j - j].first != m_board[area].first)
+                ways.push_back(area + 8 * j - j);
+            else {
+                if (m_board[area + 8 * j - j].first != m_board[area].first)
+                    ways.push_back(area + 8 * j - j);
+                break;
+            }
+        }
+    }
+
+    return ways;
+}
+
+std::list<int> ChessLogic::queenWays(int area, bool check) {
+    std::list<int> ways;
+
+    for (auto i : rookWays(area, check))
+        ways.push_back(i);
+
+    for (auto i : bishopWays(area, check))
+        ways.push_back(i);
+
+    return ways;
+}
+
+std::list<int> ChessLogic::knightWays(int area) {
+    std::list<int> ways;
+
+
+    if (getX(area) > 0
+        && getX(area + 15) != -1
+        && getY(area + 15) != -1
+        && m_board[area + 15].first != m_board[area].first) {
+        ways.push_back(area + 15);
+    }
+    if (getX(area) > 1
+        && getX(area + 6) != -1
+        && getY(area + 6) != -1
+        && m_board[area + 6].first != m_board[area].first) {
+        ways.push_back(area + 6);
+    }
+    if (getX(area) < 7
+        && getX(area + 17) != -1
+        && getY(area + 17) != -1
+        && m_board[area + 17].first != m_board[area].first) {
+        ways.push_back(area + 17);
+    }
+    if (getX(area) < 6
+        && getX(area + 10) != -1
+        && getY(area + 10) != -1
+        && m_board[area + 10].first != m_board[area].first) {
+        ways.push_back(area + 10);
+    }
+    if (getX(area) < 7
+        && getX(area - 15) != -1
+        && getY(area - 15) != -1
+        && m_board[area - 15].first != m_board[area].first) {
+        ways.push_back(area - 15);
+    }
+    if (getX(area) < 6
+        && getX(area - 6) != -1
+        && getY(area - 6) != -1
+        && m_board[area - 6].first != m_board[area].first) {
+        ways.push_back(area - 6);
+    }
+    if (getX(area) > 0
+        && getX(area - 17) != -1
+        && getY(area - 17) != -1
+        && m_board[area - 17].first != m_board[area].first) {
+        ways.push_back(area - 17);
+    }
+    if (getX(area) > 1
+        && getX(area - 10) != -1
+        && getY(area - 10) != -1
+        && m_board[area - 10].first != m_board[area].first) {
+        ways.push_back(area - 10);
+    }
+
+    return ways;
+}
+
+std::list<int> ChessLogic::kingWays(int area, bool check) {
+    std::list<int> ways;
+    std::list<int> tmp;
+    std::list<int> enemy;
+    std::list<std::list<int>> enemy_ways;
+
+    if (getX(area) > 0 && m_board[area - 1].first != m_board[area].first)
+        tmp.push_back(area - 1);
+    if (getY(area) > 0 && m_board[area - 8].first != m_board[area].first)
+        tmp.push_back(area - 8);
+    if (getX(area) > 0 && getY(area) > 0 && m_board[area - 9].first != m_board[area].first)
+        tmp.push_back(area - 9);
+
+    if (getY(area) < 7 && m_board[area + 8].first != m_board[area].first)
+        tmp.push_back(area + 8);
+    if (getX(area) > 0 && getY(area) < 7 && m_board[area + 7].first != m_board[area].first)
+        tmp.push_back(area +7);
+
+    if (getX(area) < 7 && m_board[area + 1].first != m_board[area].first)
+        tmp.push_back(area + 1);
+    if (getX(area) < 7 && getY(area) > 0 && m_board[area - 7].first != m_board[area].first)
+        tmp.push_back(area - 7);
+    if (getX(area) < 7 && getY(area) < 7 && m_board[area + 9].first != m_board[area].first)
+        tmp.push_back(area + 9);
+
+    for (int i = 0; i < 64; i++) {
+        if (m_board[i].first != ChessColor::No
+            && m_board[i].first != m_board[area].first) {
+            //enemy.push_back(i);
+            switch (m_board[i].second) {
+                case (ChessFigure::Pawn):
+                    enemy_ways.push_back(pawnWays(i, true));
+                    break;
+                case (ChessFigure::Rook):
+                    enemy_ways.push_back(rookWays(i, true));
+                    break;
+                case (ChessFigure::Bishop):
+                    enemy_ways.push_back(bishopWays(i, true));
+                    break;
+                case (ChessFigure::Queen):
+                    enemy_ways.push_back(queenWays(i, true));
+                    break;
+                case (ChessFigure::Knight):
+                    enemy_ways.push_back(knightWays(i));
+                    break;
+                case (ChessFigure::King):
+                    if (check == false)
+                        enemy_ways.push_back(kingWays(i, true));
+//                    else
+//                        enemy_ways.push_back(kingWays(i));
+                    break;
+            }
+        }
+    }
+
+    for (auto i : tmp) {
+        bool flag = true;
+        for (auto j : enemy_ways) {
+            if (std::find(j.begin(), j.end(), i) != j.end()) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag)
+            ways.push_back(i);
+    }
+
     return ways;
 }
 
 std::list<int> ChessLogic::selectArea(int area) {
     if (m_board[area].first == ChessColor::No || m_board[area].first != m_turn)
         return std::list<int>();
-    if (m_board[area].second == ChessFigure::Pawn)
-        return pawnWays(area);
+    switch (m_board[area].second) {
+        case (ChessFigure::Pawn):
+            return pawnWays(area);
+        case (ChessFigure::Rook):
+            return rookWays(area);
+        case (ChessFigure::Bishop):
+            return bishopWays(area);
+        case (ChessFigure::Queen):
+            return queenWays(area);
+        case (ChessFigure::Knight):
+            return knightWays(area);
+        case (ChessFigure::King):
+            return kingWays(area);
+    }
+    return std::list<int>();
 }
