@@ -3,6 +3,13 @@
 ChessLogic::ChessLogic() {
     m_board = std::array<std::pair<ChessColor, ChessFigure>, 64>();
     m_turn = ChessColor::White;
+    m_whiteCastling = false;
+    m_blackCastling = false;
+    m_whiteLeftRookMove = false;
+    m_whiteRightRookMove = false;
+    m_blackLeftRookMove = false;
+    m_blackRightRookMove = false;
+    m_check = false;
 
     for (int i = 0; i < 64; i++)
         m_board[i] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
@@ -64,14 +71,48 @@ ChessColor ChessLogic::getTurn() {
 }
 
 void ChessLogic::moveFigure(int from, int to) {
-    if (m_turn == m_board[from].first) {
-        m_board[to] = m_board[from];
-        m_board[from] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
+    if (m_turn != m_board[from].first)
+        return;
+
+    m_board[to] = m_board[from];
+    m_board[from] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
+    if (m_board[to].first == ChessColor::White)
+        m_turn = ChessColor::Black;
+    else
+        m_turn = ChessColor::White;
+    if (m_board[to].second == ChessFigure::King) {
+        if (from - to == 2) {
+            m_board[to + 1] = m_board[to - 2];
+            m_board[to - 2] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
+        }
+        if (from - to == -2) {
+            m_board[to - 1] = m_board[to + 1];
+            m_board[to + 1] = std::pair<ChessColor, ChessFigure>(ChessColor::No, ChessFigure::None);
+        }
         if (m_board[to].first == ChessColor::White)
-            m_turn = ChessColor::Black;
+            m_whiteCastling = true;
         else
-            m_turn = ChessColor::White;
+            m_blackCastling = true;
     }
+
+    if (m_board[to].second == ChessFigure::Rook && m_board[to].first == ChessColor::Black) {
+        if (from == 0)
+            m_blackLeftRookMove = true;
+        if (from == 7)
+            m_blackRightRookMove = true;
+    }
+    if (m_board[to].second == ChessFigure::Rook && m_board[to].first == ChessColor::White) {
+        if (from == 56)
+            m_whiteLeftRookMove = true;
+        if (from == 63)
+            m_whiteRightRookMove = true;
+    }
+
+    if (enemy_atack_king() == true)
+        m_check = true;
+    else
+        m_check = false;
+    std::cerr << "Check - " << m_check << std::endl;
 }
 
 std::list<int> ChessLogic::pawnWays(int area, bool check) {
@@ -185,6 +226,9 @@ std::list<int> ChessLogic::rookWays(int area, bool check) {
         }
     }
 
+//    if (m_check) {
+//        for (int i = 0;)
+//    }
     return ways;
 }
 
@@ -355,10 +399,11 @@ std::list<int> ChessLogic::kingWays(int area, bool check) {
     if (getX(area) < 7 && getY(area) < 7 && m_board[area + 9].first != m_board[area].first)
         tmp.push_back(area + 9);
 
+    if (check)
+        return tmp;
     for (int i = 0; i < 64; i++) {
         if (m_board[i].first != ChessColor::No
             && m_board[i].first != m_board[area].first) {
-            //enemy.push_back(i);
             switch (m_board[i].second) {
                 case (ChessFigure::Pawn):
                     enemy_ways.push_back(pawnWays(i, true));
@@ -376,10 +421,7 @@ std::list<int> ChessLogic::kingWays(int area, bool check) {
                     enemy_ways.push_back(knightWays(i));
                     break;
                 case (ChessFigure::King):
-                    if (check == false)
-                        enemy_ways.push_back(kingWays(i, true));
-//                    else
-//                        enemy_ways.push_back(kingWays(i));
+                    enemy_ways.push_back(kingWays(i, true));
                     break;
             }
         }
@@ -395,6 +437,42 @@ std::list<int> ChessLogic::kingWays(int area, bool check) {
         }
         if (flag)
             ways.push_back(i);
+    }
+
+    if ((m_board[area].first == ChessColor::White && m_whiteCastling == false)
+        || (m_board[area].first == ChessColor::Black && m_blackCastling == false)) {
+        if (m_board[area + 1].first == ChessColor::No
+            && m_board[area + 2].first == ChessColor::No
+            && ((!m_whiteRightRookMove && m_board[area].first == ChessColor::White)
+                || (!m_blackRightRookMove && m_board[area].first == ChessColor::Black))) {
+            bool flag = true;
+            for (auto j : enemy_ways) {
+                if (std::find(j.begin(), j.end(), area + 1) != j.end()
+                    && std::find(j.begin(), j.end(), area + 2) != j.end()) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                ways.push_back(area + 2);
+        }
+        if (m_board[area - 1].first == ChessColor::No
+            && m_board[area - 2].first == ChessColor::No
+            && m_board[area - 3].first == ChessColor::No
+            && ((!m_whiteLeftRookMove && m_board[area].first == ChessColor::White)
+                || (!m_blackLeftRookMove && m_board[area].first == ChessColor::Black))) {
+            bool flag = true;
+            for (auto j : enemy_ways) {
+                if (std::find(j.begin(), j.end(), area - 1) != j.end()
+                    || std::find(j.begin(), j.end(), area - 2) != j.end()
+                    || std::find(j.begin(), j.end(), area - 3) != j.end()) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                ways.push_back(area - 2);
+        }
     }
 
     return ways;
@@ -418,4 +496,48 @@ std::list<int> ChessLogic::selectArea(int area) {
             return kingWays(area);
     }
     return std::list<int>();
+}
+
+bool ChessLogic::enemy_atack_king() {
+    std::list<std::list<int>> enemy_ways;
+    int king;
+
+    for (king = 0; king < 64; king++) {
+        if (m_board[king].first == m_turn && m_board[king].second == ChessFigure::King) {
+            break;
+        }
+    }
+
+    for (int i = 0; i < 64; i++) {
+        if (m_board[i].first != ChessColor::No
+            && m_board[i].first != m_board[king].first) {
+            switch (m_board[i].second) {
+                case (ChessFigure::Pawn):
+                    enemy_ways.push_back(pawnWays(i, true));
+                    break;
+                case (ChessFigure::Rook):
+                    enemy_ways.push_back(rookWays(i, true));
+                    break;
+                case (ChessFigure::Bishop):
+                    enemy_ways.push_back(bishopWays(i, true));
+                    break;
+                case (ChessFigure::Queen):
+                    enemy_ways.push_back(queenWays(i, true));
+                    break;
+                case (ChessFigure::Knight):
+                    enemy_ways.push_back(knightWays(i));
+                    break;
+                case (ChessFigure::King):
+                    enemy_ways.push_back(kingWays(i, true));
+                    break;
+            }
+        }
+    }
+
+    for (auto i : enemy_ways) {
+        if (std::find(i.begin(), i.end(), king) != i.end()) {
+            return true;
+        }
+    }
+    return false;
 }

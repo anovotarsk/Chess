@@ -144,8 +144,8 @@ void ChessBoard::drawFigures(QPainter *p) {
         int y;
 
         for (auto i : ways) {
-            x = (m_logic->getX(i) + 1) * size.height() / 10;
-            y = (m_logic->getY(i) + 1) * size.height() / 10;
+            x = (m_logic->getX(i) + 1) * (size.height() / 10);
+            y = (m_logic->getY(i) + 1) * (size.height() / 10);
             p->setBrush(br);
             p->drawRect(x, y, size.height() / 10, size.height() / 10);
         }
