@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(test LANGUAGES CXX)
+project(Chess LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -16,19 +16,12 @@ set(CMAKE_PREFIX_PATH "C:/Qt/5.15.1/mingw81_64")
 find_package(QT NAMES Qt5 COMPONENTS Widgets Gui REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-set(PROJECT_SOURCES
+include_directories(src)
+
+add_executable(${PROJECT_NAME}
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        chessboard.cpp
-        chessboard.h
-        chesslogic.cpp
-        chesslogic.h
 )
+add_subdirectory(src)
 
-add_executable(test
-        ${PROJECT_SOURCES}
-)
-
-target_link_libraries(test PRIVATE Qt5::Widgets Qt5::Gui)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Gui)
+target_link_libraries(${PROJECT_NAME} chess_lib)

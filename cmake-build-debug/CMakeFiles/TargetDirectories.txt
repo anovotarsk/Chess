@@ -1,4 +1,8 @@
-C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/test.dir
-C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/novot/Documents/test/cmake-build-debug/CMakeFiles/test_autogen.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/CMakeFiles/Chess.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/CMakeFiles/Chess_autogen.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/src/CMakeFiles/chess_lib.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+C:/Users/novot/Documents/Chess/cmake-build-debug/src/CMakeFiles/chess_lib_autogen.dir

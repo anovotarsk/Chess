@@ -67,24 +67,13 @@ RM = "C:\Program Files\JetBrains\CLion 2020.2.4\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\novot\Documents\test
+CMAKE_SOURCE_DIR = C:\Users\novot\Documents\Chess
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\novot\Documents\test\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\novot\Documents\Chess\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	"C:\Program Files\JetBrains\CLion 2020.2.4\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -97,11 +86,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	"C:\Program Files\JetBrains\CLion 2020.2.4\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\novot\Documents\test\cmake-build-debug\CMakeFiles C:\Users\novot\Documents\test\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\novot\Documents\Chess\cmake-build-debug\CMakeFiles C:\Users\novot\Documents\Chess\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\novot\Documents\test\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\novot\Documents\Chess\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -130,30 +130,83 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named test
+# Target rules for targets named Chess
 
 # Build rule for target.
-test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 test
-.PHONY : test
+Chess: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Chess
+.PHONY : Chess
 
 # fast build rule for target.
-test/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/build
-.PHONY : test/fast
+Chess/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/build
+.PHONY : Chess/fast
 
 #=============================================================================
-# Target rules for targets named test_autogen
+# Target rules for targets named Chess_autogen
 
 # Build rule for target.
-test_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 test_autogen
-.PHONY : test_autogen
+Chess_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Chess_autogen
+.PHONY : Chess_autogen
 
 # fast build rule for target.
-test_autogen/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_autogen.dir\build.make CMakeFiles/test_autogen.dir/build
-.PHONY : test_autogen/fast
+Chess_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess_autogen.dir\build.make CMakeFiles/Chess_autogen.dir/build
+.PHONY : Chess_autogen/fast
+
+#=============================================================================
+# Target rules for targets named chess_lib
+
+# Build rule for target.
+chess_lib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 chess_lib
+.PHONY : chess_lib
+
+# fast build rule for target.
+chess_lib/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\chess_lib.dir\build.make src/CMakeFiles/chess_lib.dir/build
+.PHONY : chess_lib/fast
+
+#=============================================================================
+# Target rules for targets named chess_lib_autogen
+
+# Build rule for target.
+chess_lib_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 chess_lib_autogen
+.PHONY : chess_lib_autogen
+
+# fast build rule for target.
+chess_lib_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\chess_lib_autogen.dir\build.make src/CMakeFiles/chess_lib_autogen.dir/build
+.PHONY : chess_lib_autogen/fast
+
+Chess_autogen/mocs_compilation.obj: Chess_autogen/mocs_compilation.cpp.obj
+
+.PHONY : Chess_autogen/mocs_compilation.obj
+
+# target to build an object file
+Chess_autogen/mocs_compilation.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/Chess_autogen/mocs_compilation.cpp.obj
+.PHONY : Chess_autogen/mocs_compilation.cpp.obj
+
+Chess_autogen/mocs_compilation.i: Chess_autogen/mocs_compilation.cpp.i
+
+.PHONY : Chess_autogen/mocs_compilation.i
+
+# target to preprocess a source file
+Chess_autogen/mocs_compilation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/Chess_autogen/mocs_compilation.cpp.i
+.PHONY : Chess_autogen/mocs_compilation.cpp.i
+
+Chess_autogen/mocs_compilation.s: Chess_autogen/mocs_compilation.cpp.s
+
+.PHONY : Chess_autogen/mocs_compilation.s
+
+# target to generate assembly for a file
+Chess_autogen/mocs_compilation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/Chess_autogen/mocs_compilation.cpp.s
+.PHONY : Chess_autogen/mocs_compilation.cpp.s
 
 main.obj: main.cpp.obj
 
@@ -161,7 +214,7 @@ main.obj: main.cpp.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -170,7 +223,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -179,62 +232,8 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Chess.dir\build.make CMakeFiles/Chess.dir/main.cpp.s
 .PHONY : main.cpp.s
-
-mainwindow.obj: mainwindow.cpp.obj
-
-.PHONY : mainwindow.obj
-
-# target to build an object file
-mainwindow.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/mainwindow.cpp.obj
-.PHONY : mainwindow.cpp.obj
-
-mainwindow.i: mainwindow.cpp.i
-
-.PHONY : mainwindow.i
-
-# target to preprocess a source file
-mainwindow.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/mainwindow.cpp.i
-.PHONY : mainwindow.cpp.i
-
-mainwindow.s: mainwindow.cpp.s
-
-.PHONY : mainwindow.s
-
-# target to generate assembly for a file
-mainwindow.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/mainwindow.cpp.s
-.PHONY : mainwindow.cpp.s
-
-test_autogen/mocs_compilation.obj: test_autogen/mocs_compilation.cpp.obj
-
-.PHONY : test_autogen/mocs_compilation.obj
-
-# target to build an object file
-test_autogen/mocs_compilation.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/test_autogen/mocs_compilation.cpp.obj
-.PHONY : test_autogen/mocs_compilation.cpp.obj
-
-test_autogen/mocs_compilation.i: test_autogen/mocs_compilation.cpp.i
-
-.PHONY : test_autogen/mocs_compilation.i
-
-# target to preprocess a source file
-test_autogen/mocs_compilation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/test_autogen/mocs_compilation.cpp.i
-.PHONY : test_autogen/mocs_compilation.cpp.i
-
-test_autogen/mocs_compilation.s: test_autogen/mocs_compilation.cpp.s
-
-.PHONY : test_autogen/mocs_compilation.s
-
-# target to generate assembly for a file
-test_autogen/mocs_compilation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/test_autogen/mocs_compilation.cpp.s
-.PHONY : test_autogen/mocs_compilation.cpp.s
 
 # Help Target
 help:
@@ -244,17 +243,16 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... test_autogen
-	@echo ... test
+	@echo ... Chess_autogen
+	@echo ... chess_lib_autogen
+	@echo ... Chess
+	@echo ... chess_lib
+	@echo ... Chess_autogen/mocs_compilation.obj
+	@echo ... Chess_autogen/mocs_compilation.i
+	@echo ... Chess_autogen/mocs_compilation.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
-	@echo ... mainwindow.obj
-	@echo ... mainwindow.i
-	@echo ... mainwindow.s
-	@echo ... test_autogen/mocs_compilation.obj
-	@echo ... test_autogen/mocs_compilation.i
-	@echo ... test_autogen/mocs_compilation.s
 .PHONY : help
 
 

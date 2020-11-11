@@ -1,0 +1,2 @@
+C:\Qt\Tools\mingw810_64\bin\ar.exe qc libchess_lib.a  CMakeFiles/chess_lib.dir/chess_lib_autogen/mocs_compilation.cpp.obj CMakeFiles/chess_lib.dir/mainwindow.cpp.obj CMakeFiles/chess_lib.dir/chessboard.cpp.obj CMakeFiles/chess_lib.dir/chesslogic.cpp.obj
+C:\Qt\Tools\mingw810_64\bin\ranlib.exe libchess_lib.a
