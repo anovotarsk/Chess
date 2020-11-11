@@ -20,4 +20,4 @@ If you do not have ```CMAKE_PREFIX_PATH``` you can fix it in 2 ways:
 Run the executable file ```Chess.exe```.
 
 ### P.S
-The directory already contains an executable file ```Chess.exe```. If you don't want to compile the program yourself, use it.
+The directory ```cmake-build-debug``` already contains an executable file ```Chess.exe```. If you don't want to compile the program yourself, use it.
