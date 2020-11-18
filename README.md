@@ -6,18 +6,20 @@
 
 ### Building
 ##### First step
-If you do not have ```CMAKE_PREFIX_PATH``` you can fix it in 2 ways:
+If you do not have ```CMAKE_PREFIX_PATH```:
 - go into ```CMakeLists.txt``` and ```src/CMakeLists.txt``` then add ```set(CMAKE_PREFIX_PATH "/your/path/to/qt")```
 
 ##### Second step
-   Run CMake
+   Run CMake  
+   Example - ```cmake . -Bbuild -Wdev -Werror=dev && cmake --build ./build```
 
 ##### Third step
-   Extract everything from the directory ```libraries``` to directory with created executable file.
-   Move the directory ```resources``` to the directory with the created executable file.
+   Move the directory ```resources``` to the directory with the created executable file.  
+   If you are using Windows, extract everything from the directory ```libraries``` to directory with created executable file.
    
 ### Run
-Run the executable file ```Chess.exe```.
+   Run the executable file ```Chess``` or ```Chess.exe```.
 
 ### P.S
-The directory ```cmake-build-debug``` already contains an executable file ```Chess.exe```. If you don't want to compile the program yourself, use it.
+   With the left mouse button, select the shape we want to resemble.  
+   Move with the right button.
